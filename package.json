@@ -1,0 +1,13 @@
+{
+  "name": "mbg-miniapp",
+  "version": "1.0.0",
+  "description": "MBG (Makan Bang) Token Mining Telegram MiniApp",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "start": "python3 -m http.server 3000"
+  },
+  "keywords": ["telegram", "miniapp", "mining", "token", "mbg"],
+  "author": "MBG Team",
+  "license": "MIT"
+}

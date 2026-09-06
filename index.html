@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="MBG (Makan Bang) - Mining Token Telegram MiniApp">
+  <meta name="theme-color" content="#1A1A2E">
+  <title>$MBG - Makan Bang Mining</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="asset/logoMbg.svg">
+  
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== Loading Screen ===== -->
+  <div class="loading-screen">
+    <div class="loading-logo">
+      <img src="asset/logoMbg.svg" alt="MBG Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <svg viewBox="0 0 512 512" style="display:none;width:100%;height:100%;">
+        <defs>
+          <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FFD700"/>
+            <stop offset="100%" style="stop-color:#FF6B35"/>
+          </linearGradient>
+        </defs>
+        <circle cx="256" cy="256" r="220" fill="url(#lg1)"/>
+        <text x="256" y="290" font-family="Arial Black" font-size="100" font-weight="900" fill="#8B4513" text-anchor="middle">MBG</text>
+      </svg>
+    </div>
+    <div class="loading-text">$MBG MINING</div>
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- ===== Main App Container ===== -->
+  <div class="app-container">
+    
+    <!-- ===== Header ===== -->
+    <header class="header">
+      <div class="header-left">
+        <div class="header-logo">
+          <img src="asset/logoMbg.svg" alt="MBG" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" onerror="this.style.display='none';this.parentElement.innerHTML='MBG'">
+        </div>
+        <div class="header-title">
+          <h1>Makan Bang</h1>
+          <p>$MBG Mining App</p>
+        </div>
+      </div>
+      <div class="header-balance">
+        <div class="balance-icon">$</div>
+        <span class="balance-amount balance-display">0.0000</span>
+      </div>
+    </header>
+
+    <!-- ===== TAB: MINING ===== -->
+    <div id="tab-mining" class="tab-content active">
+      
+      <!-- Funding Banner -->
+      <div class="funding-banner">
+        <div class="funding-info">
+          <h3>Total Funding</h3>
+          <div class="funding-amount">$1,000,000</div>
+        </div>
+        <div class="funding-badge">TERKONFIRMASI</div>
+      </div>
+
+      <!-- About Token Card -->
+      <div class="about-token-card">
+        <h3>🌟 Tentang $MBG</h3>
+        <p>
+          <span class="highlight">Makan Bang ($MBG)</span> adalah token revolusioner yang memberdayakan komunitas melalui mekanisme mining yang adil dan transparan. 
+          Dengan fondasi yang kuat dan visi jangka panjang, $MBG hadir untuk membawa perubahan positif dalam ekosistem kripto. 
+          Harga estimasi: <span class="highlight">$0.01 per MBG</span>.
+        </p>
+      </div>
+
+      <!-- Mining Section -->
+      <div class="mining-section">
+        <div class="mining-title">PENDAPATAN SAAT INI</div>
+        <div class="mining-earned" id="currentEarning">0.0000</div>
+        <div class="mining-earned-label">MBG • Boost Level <span id="boostLevelDisplay">1</span></div>
+        
+        <div class="mining-button-container">
+          <svg class="progress-ring" viewBox="0 0 220 220">
+            <circle class="bg" cx="110" cy="110" r="105"/>
+            <circle class="progress" cx="110" cy="110" r="105" stroke-dasharray="659.7" stroke-dashoffset="659.7"/>
+          </svg>
+          <button class="mining-button" id="miningBtn">
+            <div class="mining-button-text" id="miningBtnText">🚀 Mulai Mining</div>
+            <div class="mining-button-subtext" id="miningBtnSubtext">2 Jam • 0.5 MBG</div>
+          </button>
+        </div>
+        
+        <div class="mining-stats">
+          <div class="mining-stat">
+            <div class="mining-stat-value balance-display">0.0000</div>
+            <div class="mining-stat-label">Saldo</div>
+          </div>
+          <div class="mining-stat">
+            <div class="mining-stat-value" id="totalEarnedDisplay">0.0000</div>
+            <div class="mining-stat-label">Total Earned</div>
+          </div>
+          <div class="mining-stat">
+            <div class="mining-stat-value" id="hashRateDisplay">1.0x</div>
+            <div class="mining-stat-label">Hash Rate</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boost Section -->
+      <div class="boost-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="section-icon">⚡</span>
+            Boost Mining
+          </div>
+        </div>
+        
+        <div class="boost-info">
+          <div>
+            <div class="boost-level">Level Boost</div>
+            <div class="boost-level-value" id="boostLevel">Level 1</div>
+            <div class="boost-multiplier" id="boostMultiplier">1.0x Kecepatan Mining</div>
+          </div>
+          <div>
+            <button class="boost-upgrade-btn" id="upgradeBoostBtn">⬆️ Upgrade</button>
+            <div class="boost-cost" id="boostCost">Biaya: 10 MBG</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: QUEST ===== -->
+    <div id="tab-quest" class="tab-content" style="padding: 16px;">
+      
+      <div class="section-header" style="margin-bottom: 16px;">
+        <div class="section-title">
+          <span class="section-icon">🎯</span>
+          Tugas Harian
+        </div>
+      </div>
+
+      <div class="ads-counter">
+        <div class="ads-counter-text" id="adsCounter">0/10 iklan ditonton hari ini</div>
+      </div>
+
+      <div class="quest-list" style="margin-top: 16px;">
+        
+        <!-- Watch Ads Quest -->
+        <div class="quest-item">
+          <div class="quest-left">
+            <div class="quest-icon">🎬</div>
+            <div class="quest-info">
+              <h4>Tonton Iklan</h4>
+              <p>+0.1 MBG per iklan • 10x sehari</p>
+            </div>
+          </div>
+          <div class="quest-action">
+            <div class="quest-reward">+0.1 MBG</div>
+            <button class="quest-btn watch-ad-btn">Tonton</button>
+          </div>
+        </div>
+
+        <!-- Daily Mining Quest -->
+        <div class="quest-item">
+          <div class="quest-left">
+            <div class="quest-icon">⛏️</div>
+            <div class="quest-info">
+              <h4>Mining Selesai</h4>
+              <p>Selesaikan 1 sesi mining</p>
+            </div>
+          </div>
+          <div class="quest-action">
+            <div class="quest-reward">+0.5 MBG</div>
+            <button class="quest-btn" disabled>Mining</button>
+          </div>
+        </div>
+
+        <!-- Boost Upgrade Quest -->
+        <div class="quest-item">
+          <div class="quest-left">
+            <div class="quest-icon">⚡</div>
+            <div class="quest-info">
+              <h4>Upgrade Boost</h4>
+              <p>Tingkatkan level boost mining</p>
+            </div>
+          </div>
+          <div class="quest-action">
+            <div class="quest-reward">Bonus</div>
+            <button class="quest-btn" onclick="switchTab('mining')">Upgrade</button>
+          </div>
+        </div>
+
+        <!-- Invite Friends Quest -->
+        <div class="quest-item">
+          <div class="quest-left">
+            <div class="quest-icon">👥</div>
+            <div class="quest-info">
+              <h4>Undang Teman</h4>
+              <p>Ajak teman bergabung</p>
+            </div>
+          </div>
+          <div class="quest-action">
+            <div class="quest-reward">+10%</div>
+            <button class="quest-btn" onclick="showToast('🔗 Fitur segera hadir!')">Undang</button>
+          </div>
+        </div>
+
+        <!-- Join Community Quest -->
+        <div class="quest-item">
+          <div class="quest-left">
+            <div class="quest-icon">💬</div>
+            <div class="quest-info">
+              <h4>Gabung Komunitas</h4>
+              <p>Bergabung dengan channel resmi</p>
+            </div>
+          </div>
+          <div class="quest-action">
+            <div class="quest-reward">+5.0 MBG</div>
+            <button class="quest-btn" onclick="showToast('💬 Fitur segera hadir!')">Gabung</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== TAB: CHECK-IN ===== -->
+    <div id="tab-checkin" class="tab-content" style="padding: 16px;">
+      
+      <div class="section-header" style="margin-bottom: 16px;">
+        <div class="section-title">
+          <span class="section-icon">📅</span>
+          Daily Check-in
+        </div>
+      </div>
+
+      <div class="boost-section" style="margin: 0;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Streak Saat Ini</div>
+          <div style="font-size: 36px; font-weight: 900; color: var(--primary);" id="checkInStreak">0 hari</div>
+        </div>
+
+        <div class="checkin-calendar">
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+          <div class="checkin-day"><div class="checkin-day-num">-</div></div>
+        </div>
+
+        <button class="checkin-btn" id="checkInBtn">🎁 Check-in Sekarang</button>
+      </div>
+    </div>
+
+    <!-- ===== TAB: RANK ===== -->
+    <div id="tab-rank" class="tab-content" style="padding: 16px;">
+      
+      <div class="section-header" style="margin-bottom: 16px;">
+        <div class="section-title">
+          <span class="section-icon">🏆</span>
+          Leaderboard
+        </div>
+      </div>
+
+      <!-- Top 3 Podium -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px;">
+        <div style="text-align: center; padding: 16px 8px; background: linear-gradient(180deg, rgba(192,192,192,0.15), transparent); border-radius: 16px; border: 1px solid rgba(192,192,192,0.2);">
+          <div style="font-size: 24px;">🥈</div>
+          <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Rank 2</div>
+        </div>
+        <div style="text-align: center; padding: 20px 8px; background: linear-gradient(180deg, rgba(255,215,0,0.2), transparent); border-radius: 16px; border: 1px solid rgba(255,215,0,0.3); transform: translateY(-10px);">
+          <div style="font-size: 28px;">🥇</div>
+          <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Rank 1</div>
+        </div>
+        <div style="text-align: center; padding: 16px 8px; background: linear-gradient(180deg, rgba(205,127,50,0.15), transparent); border-radius: 16px; border: 1px solid rgba(205,127,50,0.2);">
+          <div style="font-size: 24px;">🥉</div>
+          <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Rank 3</div>
+        </div>
+      </div>
+
+      <div class="rank-list" id="rankList">
+        <!-- Will be populated by JS -->
+      </div>
+    </div>
+
+    <!-- ===== TAB: WALLET ===== -->
+    <div id="tab-wallet" class="tab-content" style="padding: 16px;">
+      
+      <div class="section-header" style="margin-bottom: 16px;">
+        <div class="section-title">
+          <span class="section-icon">💼</span>
+          Wallet
+        </div>
+      </div>
+
+      <div class="wallet-card">
+        <div class="wallet-label">Total Saldo</div>
+        <div class="wallet-balance" id="walletBalance">0.0000 MBG</div>
+        <div class="wallet-usd" id="walletUsd">≈ $0.0000</div>
+        
+        <div class="wallet-actions">
+          <button class="wallet-action-btn" onclick="showToast('🔗 Fitur withdraw segera hadir!')">
+            <span class="wallet-action-icon">📤</span>
+            <span>Withdraw</span>
+          </button>
+          <button class="wallet-action-btn" onclick="showToast('🔗 Fitur deposit segera hadir!')">
+            <span class="wallet-action-icon">📥</span>
+            <span>Deposit</span>
+          </button>
+          <button class="wallet-action-btn" onclick="showToast('📋 Riwayat segera hadir!')">
+            <span class="wallet-action-icon">📊</span>
+            <span>Riwayat</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="token-info">
+        <div class="token-info-item">
+          <span class="token-info-label">Harga Token</span>
+          <span class="token-info-value">$0.01 / MBG</span>
+        </div>
+        <div class="token-info-item">
+          <span class="token-info-label">Total Funding</span>
+          <span class="token-info-value">$1,000,000</span>
+        </div>
+        <div class="token-info-item">
+          <span class="token-info-label">Jaringan</span>
+          <span class="token-info-value">TON / TBA</span>
+        </div>
+        <div class="token-info-item">
+          <span class="token-info-label">Kontrak</span>
+          <span class="token-info-value" style="font-size: 10px;">Segera Diumumkan</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: PROFILE ===== -->
+    <div id="tab-profile" class="tab-content" style="padding: 16px;">
+      
+      <div class="profile-header">
+        <div class="profile-avatar">MB</div>
+        <div class="profile-name">Makan Bang User</div>
+        <div class="profile-username">@mbgminer</div>
+        
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <div class="profile-stat-value" id="userRank">127</div>
+            <div class="profile-stat-label">Rank</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-value balance-display">0.00</div>
+            <div class="profile-stat-label">Saldo MBG</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-value" id="userReferrals">0</div>
+            <div class="profile-stat-label">Referral</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-menu">
+        <a href="https://mbgdocs.vercel.app/" target="_blank" class="profile-menu-item" id="aboutUsLink">
+          <div class="profile-menu-icon">📖</div>
+          <div class="profile-menu-text">
+            <div class="profile-menu-title">About Us</div>
+            <div class="profile-menu-subtitle">Pelajari tentang $MBG</div>
+          </div>
+          <span class="profile-menu-arrow">›</span>
+        </a>
+        
+        <div class="profile-menu-item" onclick="showToast('🔗 Fitur segera hadir!')">
+          <div class="profile-menu-icon">👥</div>
+          <div class="profile-menu-text">
+            <div class="profile-menu-title">Referral</div>
+            <div class="profile-menu-subtitle">Ajak teman & dapat bonus</div>
+          </div>
+          <span class="profile-menu-arrow">›</span>
+        </div>
+        
+        <div class="profile-menu-item" onclick="showToast('⚙️ Pengaturan segera hadir!')">
+          <div class="profile-menu-icon">⚙️</div>
+          <div class="profile-menu-text">
+            <div class="profile-menu-title">Pengaturan</div>
+            <div class="profile-menu-subtitle">Preferensi akun</div>
+          </div>
+          <span class="profile-menu-arrow">›</span>
+        </div>
+        
+        <div class="profile-menu-item" onclick="showToast('❓ Bantuan segera hadir!')">
+          <div class="profile-menu-icon">❓</div>
+          <div class="profile-menu-text">
+            <div class="profile-menu-title">Bantuan & Support</div>
+            <div class="profile-menu-subtitle">Pusat bantuan</div>
+          </div>
+          <span class="profile-menu-arrow">›</span>
+        </div>
+        
+        <div class="profile-menu-item" onclick="showToast('📢 Announcement segera hadir!')">
+          <div class="profile-menu-icon">📢</div>
+          <div class="profile-menu-text">
+            <div class="profile-menu-title">Pengumuman</div>
+            <div class="profile-menu-subtitle">Berita terbaru $MBG</div>
+          </div>
+          <span class="profile-menu-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== Bottom Navigation ===== -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-tab="mining">
+      <span class="nav-icon">⛏️</span>
+      <span>Mining</span>
+    </button>
+    <button class="nav-item" data-tab="quest">
+      <span class="nav-icon">🎯</span>
+      <span>Quest</span>
+    </button>
+    <button class="nav-item" data-tab="checkin">
+      <span class="nav-icon">📅</span>
+      <span>Check-in</span>
+    </button>
+    <button class="nav-item" data-tab="rank">
+      <span class="nav-icon">🏆</span>
+      <span>Rank</span>
+    </button>
+    <button class="nav-item" data-tab="wallet">
+      <span class="nav-icon">💼</span>
+      <span>Wallet</span>
+    </button>
+    <button class="nav-item" data-tab="profile">
+      <span class="nav-icon">👤</span>
+      <span>Profil</span>
+    </button>
+  </nav>
+
+  <!-- ===== Modal ===== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-title" id="modalTitle">Konfirmasi</div>
+      <div class="modal-message" id="modalMessage">Apakah kamu yakin?</div>
+      <div class="modal-actions">
+        <button class="modal-btn secondary">Batal</button>
+        <button class="modal-btn primary">Lanjut</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Toast ===== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== Scripts ===== -->
+  <script src="js/app.js"></script>
+
+</body>
+</html>
